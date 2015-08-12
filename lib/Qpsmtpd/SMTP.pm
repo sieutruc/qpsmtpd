@@ -5,6 +5,7 @@ use parent 'Qpsmtpd';
 
 #use Data::Dumper;
 use POSIX qw(strftime);
+use POSIX qw(locale_h);
 use Mail::Header;
 
 use Qpsmtpd;
@@ -864,6 +865,8 @@ sub received_line {
         return join("\n", @received);
     }
     else {    # assume $rc == DECLINED
+        # set CTIME to the standard format - en_US
+        setlocale(LC_TIME, "C");
         $header_str =
             "from "
           . $self->connection->remote_info
